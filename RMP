@@ -1,0 +1,19 @@
+close all;
+clear;
+
+figure();
+rawData = abfload('25408027.abf');
+% cutData = squeeze(rawData(100000:799999,1));
+channel1 = squeeze(rawData(:,1,:));
+% channel2 = squeeze(rawData(:,2,:));
+% subplot(2,1,1);
+plot(channel1);
+% xlim([0 2000]);
+% % ylim([-400 1000]);
+% subplot(2,1,2);
+% plot(channel2);
+% ylim([-70 70]);
+
+RMP = mean(channel1);
+
+% clearvars -except channel1 RMP
