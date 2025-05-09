@@ -1,0 +1,34 @@
+close all;
+clear;
+
+spikeThresh = 0;
+
+figure();
+rawData = abfload('25424019.abf');
+channel1 = squeeze(rawData(:,1,:));
+channel2 = squeeze(rawData(:,2,:));
+channel1Cut = channel1(10000:20000,:);
+spikes = [];
+for i = 1:size(channel1,2)
+    spikeRise = channel1Cut(:,i) > spikeThresh;
+    spikeRise(1) = 0;
+    spikeIndex = find(spikeRise);
+    spikeFall = channel1Cut(spikeIndex-1,i)<spikeThresh;
+    spikes = cat(2,spikes,size(spikeIndex(spikeFall),1));
+end
+channel2Cut = channel2(10000:20000,:);
+currents = [];
+for j = 1:size(channel2,2)
+    tempCurrent = mean(channel2Cut(5000:10000,j));
+    currents = cat(2,currents,tempCurrent);
+end
+subplot(2,1,1);
+plot(channel1);
+% ylim([-150 50]);
+subplot(2,1,2);
+plot(currents,spikes,'-k.');
+% ylim([0 10]);
+% figure();
+% plot(channel2);
+
+clearvars -except channel1 channel2 spikes currents
